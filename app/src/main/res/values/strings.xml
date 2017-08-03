@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">DemoAlarmClockMVP</string>
+    <string name="title">Change titile toolbar</string>
+</resources>
