@@ -30,7 +30,7 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements MainView {
+public class MainActivity extends AppCompatActivity implements MainView, View.OnClickListener {
     private MainPresenter mainPresenter;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -48,66 +48,36 @@ public class MainActivity extends AppCompatActivity implements MainView {
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         initPresenter();
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new ScheduleRecyclerViewAdapter(arrSchedule);
         recyclerView.setAdapter(adapter);
-        final TimePickerDialog.OnTimeSetListener listener = new TimePickerDialog.OnTimeSetListener() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onTimeSet(TimePicker view, int setHour, int setMinute) {
+        btnSchedule.setOnClickListener(this);
+        btnChangeTitle.setOnClickListener(this);
+    }
+
+    private TimePickerDialog.OnTimeSetListener listener = new TimePickerDialog.OnTimeSetListener() {
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        public void onTimeSet(TimePicker view, int setHour, int setMinute) {
 //                String time = timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute();
 //                Toast.makeText(MainActivity.this, time, Toast.LENGTH_SHORT).show();
-                if (view.isShown()) {
-                    Schedule schedule = new Schedule(setHour, setMinute);
-                    arrSchedule.add(schedule);
-                    Intent intent = new Intent(MainActivity.this, AlarmBroadcastReceiver.class);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, Intent.FILL_IN_ACTION);
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(Calendar.HOUR_OF_DAY, setHour);
-                    calendar.set(Calendar.MINUTE, setMinute);
-                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-
-                    mainPresenter.onDataChange();
-                    Toast.makeText(MainActivity.this, setHour + ":" + setMinute, Toast.LENGTH_SHORT).show();
-                }
-
+            if (view.isShown()) {
+                Schedule schedule = new Schedule(setHour, setMinute);
+                arrSchedule.add(schedule);
+                Intent intent = new Intent(MainActivity.this, AlarmBroadcastReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, Intent.FILL_IN_ACTION);
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, setHour);
+                calendar.set(Calendar.MINUTE, setMinute);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                mainPresenter.onDataChange();
+                Toast.makeText(MainActivity.this, setHour + ":" + setMinute, Toast.LENGTH_SHORT).show();
             }
-        };
-        btnSchedule.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int currentMinute = Calendar.getInstance().get(Calendar.MINUTE);
-                int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-                TimePickerDialog dialog = new TimePickerDialog(MainActivity.this,
-                        android.R.style.Widget_Material_Light_TimePicker,
-                        listener,
-                        currentHour,
-                        currentMinute,
-                        true);
-                dialog.show();
-            }
-        });
-        btnChangeTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Clicked", Toast.LENGTH_SHORT).show();
-                mainPresenter.onChangeTitle();
-            }
-        });
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-    }
+        }
+    };
 
     @Override
     protected void onDestroy() {
@@ -134,5 +104,25 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public void displayChildActivity() {
         Intent intent = new Intent(this, ChildActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.btnChangeTitle) {
+            Toast.makeText(MainActivity.this, "Clicked", Toast.LENGTH_SHORT).show();
+            mainPresenter.onChangeTitle();
+        } else if (view.getId() == R.id.btnSchedule) {
+            int currentMinute = Calendar.getInstance().get(Calendar.MINUTE);
+            int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+            TimePickerDialog dialog = new TimePickerDialog(MainActivity.this,
+                    android.R.style.Widget_Material_Light_TimePicker,
+                    listener,
+                    currentHour,
+                    currentMinute,
+                    true);
+            dialog.show();
+        }
+        Toast.makeText(MainActivity.this, "Clicked", Toast.LENGTH_SHORT).show();
+        mainPresenter.onChangeTitle();
     }
 }
