@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:cs="AfcsNameSpace"
+    xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark"
+    currentState="logon"
+    fontSize="28"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fx:Script>
+        [Bindable] private var roomURL:String = "http://connectnow.acrobat.com/YOUR_ROOM_NAME";
+
+        protected function connect():void {
+        auth.userName = userName.text;
+        currentState = "default";
+        session.login();
+        }</fx:Script>
+
+    <s:states>
+
+        <s:State name="default" />
+
+        <s:State name="logon" />
+    </s:states>
+
+    <fx:Declarations>
+
+        <cs:AdobeHSAuthenticator id="auth" />
+    </fx:Declarations>
+
+    <s:TextInput
+        horizontalCenter="0"
+        id="userName"
+        includeIn="logon"
+        top="200" />
+
+    <s:Button
+        click="connect()"
+        height="50dp"
+        horizontalCenter="0"
+        includeIn="logon"
+        label="Connect"
+        top="250"
+        width="150dp" />
+
+    <cs:ConnectSessionContainer
+        authenticator="{auth}"
+        autoLogin="false"
+        height="100%"
+        id="session"
+        includeIn="default"
+        roomURL="{roomURL}"
+        width="100%">
+
+        <cs:WebCamera
+            bottom="10"
+            left="10"
+            right="10"
+            top="10" />
+    </cs:ConnectSessionContainer>
+
+</s:Application>
