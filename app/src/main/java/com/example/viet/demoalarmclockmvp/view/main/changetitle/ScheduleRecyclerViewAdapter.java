@@ -21,10 +21,10 @@ import butterknife.ButterKnife;
  */
 
 public class ScheduleRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    ArrayList<Schedule> arrSchedule;
+    private ArrayList<Schedule> mArrSchedule;
 
     public ScheduleRecyclerViewAdapter(ArrayList<Schedule> arrSchedule) {
-        this.arrSchedule = arrSchedule;
+        this.mArrSchedule = arrSchedule;
     }
 
     @Override
@@ -36,13 +36,13 @@ public class ScheduleRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ScheduleViewHolder scheduleViewHolder = (ScheduleViewHolder) holder;
-        Schedule schedule = arrSchedule.get(position);
+        Schedule schedule = mArrSchedule.get(position);
         scheduleViewHolder.tvTime.setText(schedule.toString());
     }
 
     @Override
     public int getItemCount() {
-        return arrSchedule.size();
+        return mArrSchedule.size();
     }
 
     class ScheduleViewHolder extends RecyclerView.ViewHolder {

@@ -24,18 +24,18 @@ import static android.content.Context.ALARM_SERVICE;
 
 public class MainPresenterImp implements MainPresenter {
     private MainView mMainView;
-    private Context context;
+    private Context mContext;
 
     public MainPresenterImp(MainView mMainView, Context context) {
         this.mMainView = mMainView;
-        this.context = context;
+        this.mContext = context;
     }
 
     @Override
     public void onSchedule() {
         int currentMinute = Calendar.getInstance().get(Calendar.MINUTE);
         int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        TimePickerDialog dialog = new TimePickerDialog(context,
+        TimePickerDialog dialog = new TimePickerDialog(mContext,
                 android.R.style.Widget_Material_Light_TimePicker,
                 listener,
                 currentHour,
@@ -58,15 +58,15 @@ public class MainPresenterImp implements MainPresenter {
             if (view.isShown()) {
                 Schedule schedule = new Schedule(setHour, setMinute);
 
-                Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, Intent.FILL_IN_ACTION);
+                Intent intent = new Intent(mContext, AlarmBroadcastReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, Intent.FILL_IN_ACTION);
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(Calendar.HOUR_OF_DAY, setHour);
                 calendar.set(Calendar.MINUTE, setMinute);
-                AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+                AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                 mMainView.displaySchedule(schedule);
-                Toast.makeText(context, setHour + ":" + setMinute, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, setHour + ":" + setMinute, Toast.LENGTH_SHORT).show();
             }
 
         }

@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
     @BindView(R.id.btnChangeTitle)
     Button btnChangeTitle;
     private ScheduleRecyclerViewAdapter mScheduleRecyclerViewAdapter;
-    private ArrayList<Schedule> arrSchedule = new ArrayList<>();
+    private ArrayList<Schedule> mArrSchedule = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
         EventBus.getDefault().register(this);
         initPresenter();
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        mScheduleRecyclerViewAdapter = new ScheduleRecyclerViewAdapter(arrSchedule);
+        mScheduleRecyclerViewAdapter = new ScheduleRecyclerViewAdapter(mArrSchedule);
         recyclerView.setAdapter(mScheduleRecyclerViewAdapter);
         btnSchedule.setOnClickListener(this);
         btnChangeTitle.setOnClickListener(this);
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
 
     @Override
     public void displaySchedule(Schedule schedule) {
-        arrSchedule.add(schedule);
+        mArrSchedule.add(schedule);
         mScheduleRecyclerViewAdapter.notifyDataSetChanged();
     }
 

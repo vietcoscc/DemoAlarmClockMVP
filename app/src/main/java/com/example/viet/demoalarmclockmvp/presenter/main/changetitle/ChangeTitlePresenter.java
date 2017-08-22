@@ -7,14 +7,14 @@ import com.example.viet.demoalarmclockmvp.view.main.evenbus.ChildView;
  */
 
 public class ChangeTitlePresenter implements ChangeTitlePresenterImp {
-    private ChildView childView;
+    private ChildView mChildView;
 
     public ChangeTitlePresenter(ChildView childView) {
-        this.childView = childView;
+        this.mChildView = childView;
     }
 
     @Override
     public void onChangeTitle() {
-        childView.displayResult();
+        mChildView.displayResult();
     }
 }
